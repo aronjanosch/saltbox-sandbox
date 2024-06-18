@@ -1,0 +1,42 @@
+#########################################################################
+# Title:            Sandbox: Muse                                       #
+# Author(s):        Aron, Wiederkehr                                    #
+# URL:              https://github.com/saltyorg/Sandbox                 #
+# --                                                                    #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+
+- name: Fail when default muse.discord_token is specified
+  ansible.builtin.fail:
+    msg: "You must specify a Discord bot token in the settings under muse.discord_token."
+  when: (muse.discord_token == 'your_discord_bot_token') and
+        (not continuous_integration)
+
+- name: Fail when default muse.youtube_api_key is specified
+  ansible.builtin.fail:
+    msg: "You must specify a Youtube API token in the settings under muse.youtube_api_key."
+  when: (muse.youtube_api_key == 'your_youtube_api_key') and
+        (not continuous_integration)
+
+- name: Fail when default muse.spotify_client_id is specified
+  ansible.builtin.fail:
+    msg: "You must specify a Spotify Client ID in the settings under muse.spotify_client_id."
+  when: (muse.spotify_client_id == 'your_spotify_client_id') and
+        (not continuous_integration)
+
+- name: Fail when default muse.spotify_client_secret is specified
+  ansible.builtin.fail:
+    msg: "You must specify a Spotify Client Secret in the settings under muse.spotify_client_secret."
+  when: (muse.spotify_client_secret == 'your_spotify_client_secret') and
+        (not continuous_integration)
+
+- name: Remove existing Docker container
+  ansible.builtin.include_tasks: "{{ resources_tasks_path }}/docker/remove_docker_container.yml"
+
+- name: Create directories
+  ansible.builtin.include_tasks: "{{ resources_tasks_path }}/directories/create_directories.yml"
+
+- name: Create Docker container
+  ansible.builtin.include_tasks: "{{ resources_tasks_path }}/docker/create_docker_container.yml"

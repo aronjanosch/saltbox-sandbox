@@ -1,0 +1,117 @@
+#########################################################################
+# Title:            Sandbox: Muse                                       #
+# Author(s):        Aron, Wiederkehr                                    #
+# URL:              https://github.com/saltyorg/Sandbox                 #
+# --                                                                    #
+#########################################################################
+#                   GNU General Public License v3.0                     #
+#########################################################################
+---
+################################
+# Basics
+################################
+
+muse_name: muse
+
+################################
+# Paths
+################################
+
+muse_paths_folder: "{{ muse_name }}"
+muse_paths_location: "{{ server_appdata_path }}/{{ muse_paths_folder }}"
+muse_paths_folders_list:
+  - "{{ muse_paths_location }}"
+
+
+################################
+# Docker
+################################
+
+# Container
+muse_docker_container: "{{ muse_name }}"
+
+# Image
+muse_docker_image_pull: true
+muse_docker_image_tag: "latest"
+muse_docker_image: "codetheweb/muse:{{ muse_docker_image_tag }}"
+
+# Ports
+muse_docker_ports_defaults: []
+muse_docker_ports_custom: []
+muse_docker_ports: "{{ muse_docker_ports_defaults
+                            + muse_docker_ports_custom }}"
+
+# Envs
+muse_docker_envs_default:
+  TZ: "{{ tz }}"
+  PUID: "{{ uid }}"
+  PGID: "{{ gid }}"
+  DISCORD_TOKEN: "{{ muse.discord_token }}"
+  YOUTUBE_API_KEY: "{{ muse.youtube_api_key }}"
+  SPOTIFY_CLIENT_ID: "{{ muse.spotify_client_id }}"
+  SPOTIFY_CLIENT_SECRET: "{{ muse.spotify_client_secret }}"
+muse_docker_envs_custom: {}
+muse_docker_envs: "{{ muse_docker_envs_default
+                           | combine(muse_docker_envs_custom) }}"
+
+# Commands
+muse_docker_commands_default: []
+muse_docker_commands_custom: []
+muse_docker_commands: "{{ muse_docker_commands_default
+                               + muse_docker_commands_custom }}"
+
+# Volumes
+muse_docker_volumes_default:
+  - "{{ muse_paths_location }}:/data"
+muse_docker_volumes_custom: []
+muse_docker_volumes: "{{ muse_docker_volumes_default
+                              + muse_docker_volumes_custom }}"
+
+# Devices
+muse_docker_devices_default: []
+muse_docker_devices_custom: []
+muse_docker_devices: "{{ muse_docker_devices_default
+                              + muse_docker_devices_custom }}"
+
+# Hosts
+muse_docker_hosts_default: {}
+muse_docker_hosts_custom: {}
+muse_docker_hosts: "{{ docker_hosts_common
+                            | combine(muse_docker_hosts_default)
+                            | combine(muse_docker_hosts_custom) }}"
+
+# Labels
+muse_docker_labels_default: {}
+muse_docker_labels_custom: {}
+muse_docker_labels: "{{ docker_labels_common
+                             | combine(muse_docker_labels_default)
+                             | combine(muse_docker_labels_custom) }}"
+
+# Hostname
+muse_docker_hostname: "{{ muse_name }}"
+
+# Networks
+muse_docker_networks_alias: "{{ muse_name }}"
+muse_docker_networks_default: []
+muse_docker_networks_custom: []
+muse_docker_networks: "{{ docker_networks_common
+                               + muse_docker_networks_default
+                               + muse_docker_networks_custom }}"
+
+# Capabilities
+muse_docker_capabilities_default: []
+muse_docker_capabilities_custom: []
+muse_docker_capabilities: "{{ muse_docker_capabilities_default
+                                   + muse_docker_capabilities_custom }}"
+
+# Security Opts
+muse_docker_security_opts_default: []
+muse_docker_security_opts_custom: []
+muse_docker_security_opts: "{{ muse_docker_security_opts_default
+                                    + muse_docker_security_opts_custom }}"
+
+# Restart Policy
+muse_docker_restart_policy: unless-stopped
+
+# State
+muse_docker_state: started
