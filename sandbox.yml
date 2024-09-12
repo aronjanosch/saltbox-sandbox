@@ -11,6 +11,7 @@
     - ['/srv/git/saltbox/providers.yml', '/srv/git/saltbox/defaults/providers.yml.default']
   roles:
     # Reqs
+    - { role: user_check, tags: ['always'] }
     - { role: settings, tags: ['settings'] }
     - { role: pre_tasks, tags: ['always', 'pre-tasks'] }
     - { role: sanity_check, tags: ['always', 'sanity-check'] }
@@ -85,7 +86,6 @@
     - { role: jdownloader2, tags: ['jdownloader2'] }
     - { role: jellyseerr, tags: ['jellyseerr'] }
     - { role: jellystat, tags: ['jellystat'] }
-    - { role: jirafeau, tags: ['jirafeau'] }
     - { role: joplin, tags: ['joplin'] }
     - { role: kavita, tags: ['kavita'] }
     - { role: kcptun_client, tags: ['kcptun-client'] }
@@ -101,7 +101,6 @@
     - { role: logarr, tags: ['logarr'] }
     - { role: lunasea, tags: ['lunasea'] }
     - { role: makemkv, tags: ['makemkv'] }
-    - { role: mcrouter, tags: ['mcrouter'] }
     - { role: medusa, tags: ['medusa'] }
     - { role: minecraft, tags: ['minecraft'] }
     - { role: minecraft_bedrock, tags: ['minecraft-bedrock'] }
@@ -122,7 +121,7 @@
     - { role: olivetin, tags: ['olivetin'] }
     - { role: ombi, tags: ['ombi'] }
     - { role: omegabrr, tags: ['omegabrr'] }
-    - { role: ouroboros, tags: ['ouroboros'] }
+    - { role: openobserve, tags: ['openobserve'] }
     - { role: paperless_ngx, tags: ['paperless-ngx'] }
     - { role: pgadmin, tags: ['pgadmin'] }
     - { role: photoprism, tags: ['photoprism'] }
@@ -149,6 +148,7 @@
     - { role: rocketchat, tags: ['rocketchat'] }
     - { role: sabthrottle, tags: ['sabthrottle'] }
     - { role: sarotate, tags: ['sarotate'] }
+    - { role: semaphoreui, tags: ['semaphoreui'] }
     - { role: solr, tags: ['solr'] }
     - { role: speedtest, tags: ['speedtest'] }
     - { role: sqlitebrowser, tags: ['sqlitebrowser'] }

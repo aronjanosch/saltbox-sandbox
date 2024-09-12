@@ -16,6 +16,10 @@ on:
       - 'roles/settings/**'
   workflow_dispatch:
 
+permissions:
+  contents: write
+  actions: write
+
 jobs:
   ansible-lint:
     runs-on: ubuntu-22.04
@@ -24,7 +28,7 @@ jobs:
 
       - uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: '3.12'
           cache: 'pip'
           cache-dependency-path: 'requirements/requirements-lint.txt'
 
@@ -32,6 +36,7 @@ jobs:
         run: pip install -r ./requirements/requirements-lint.txt
 
       - name: Run ansible linter
+        working-directory: ${{ github.workspace }}
         run: ansible-lint
 
       - name: Run salty linter
@@ -61,7 +66,6 @@ jobs:
     strategy:
       matrix: ${{ fromJson(needs.find-roles.outputs.matrix) }}
       fail-fast: false
-
     steps:
       - uses: actions/checkout@v4
 
@@ -83,14 +87,21 @@ jobs:
       - name: Syntax Check
         run: cd /srv/git/saltbox && sudo ansible-playbook saltbox.yml --syntax-check
 
+      - name: Create CI vars file
+        run: |
+          echo "continuous_integration: true" > /tmp/vars.yml
+          echo "dockerhub:" >> /tmp/vars.yml
+          echo "  token: ${{ secrets.DOCKERHUB_TOKEN }}" >> /tmp/vars.yml
+          echo "  user: ${{ secrets.DOCKERHUB_USERNAME }}" >> /tmp/vars.yml
+
       - name: Install Saltbox Core
-        run: cd /srv/git/saltbox && sudo ansible-playbook saltbox.yml --tags "core" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
+        run: cd /srv/git/saltbox && sudo ansible-playbook saltbox.yml --tags "core" --skip-tags "settings" --extra-vars "@/tmp/vars.yml"
 
       - name: Copy default configuration
         run: cp -n defaults/ansible.cfg.default ansible.cfg && cp -n defaults/settings.yml.default settings.yml
 
       - name: Install ${{ matrix.roles }}
-        run: sudo ansible-playbook sandbox.yml --tags "${{ matrix.roles }}" --skip-tags "settings" --extra-vars '{"continuous_integration":true}'
+        run: sudo ansible-playbook sandbox.yml --tags "${{ matrix.roles }}" --skip-tags "settings" --extra-vars "@/tmp/vars.yml"
 
   webhook:
     name: 'webhook'
